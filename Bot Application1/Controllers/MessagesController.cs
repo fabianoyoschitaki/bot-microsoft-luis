@@ -26,14 +26,14 @@ namespace Bot_Application1
                 int length = (activity.Text ?? string.Empty).Length;
 
                 Activity reply;
-                if (activity.Text == "otário"
-                 || activity.Text == "otario"
-                 || activity.Text == "viado"
-                 || activity.Text == "cuzao"
-                 || activity.Text == "gay"
-                 || activity.Text == "bicha")
+                if (activity.Text == "a"
+                 || activity.Text == "b"
+                 || activity.Text == "c"
+                 || activity.Text == "d"
+                 || activity.Text == "e"
+                 || activity.Text == "f")
                 {
-                    reply = activity.CreateReply($"{activity.Text} é vc fdp");
+                    reply = activity.CreateReply($"{activity.Text} teste");
                 } else
                 {
                     // return our reply to the user
