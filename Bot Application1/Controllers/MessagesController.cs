@@ -2,6 +2,7 @@
 using Bot_Application1.Services;
 using Microsoft.Bot.Connector;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -19,32 +20,30 @@ namespace Bot_Application1
         /// </summary>
         public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
         {
-            if (activity.Type == ActivityTypes.Message)
+            ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
+            if (activity.Type == ActivityTypes.ConversationUpdate)
             {
-                ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
-                // calculate something for us to return
-                
-                Activity reply;
-                if (activity.Text == "a"
-                 || activity.Text == "b"
-                 || activity.Text == "c"
-                 || activity.Text == "d"
-                 || activity.Text == "e"
-                 || activity.Text == "f")
+                Activity reply = activity.CreateReply("Rá! Ié ié! Em que posso ajudar?");
+                reply.Attachments = new List<Attachment>();  //****** INIT
+                reply.Attachments.Add(new Attachment()
                 {
-                    reply = activity.CreateReply($"{activity.Text} teste");
-                }
-                else
+                    ContentUrl = $"http://4.bp.blogspot.com/-XyxcPFHEqrk/TzqhqdwvrPI/AAAAAAAADkc/q625G63G5eY/s1600/sergio+malandro.JPG",
+                    ContentType = "image/png",
+                    Name = "Sergio_Malandro.png"
+                });
+                reply.Attachments.Add(GetHeroCardCarousel());
+                await connector.Conversations.ReplyToActivityAsync(reply);
+            }
+            else if (activity.Type == ActivityTypes.Message)
+            {
+                // return our reply to the user
+                var r = await Response(activity.Text);
+                string retorno = "Não entendi";
+                if (r.intents[0].intent == "ConsultarNeurologista")
                 {
-                    // return our reply to the user
-                    var r = await Response(activity.Text);
-                    string retorno = "";
-                    if (r.intents[0].intent == "ConsultarNeurologista")
-                    {
-                        retorno = $"Temos os neurologistas João, Paulo etc '{r.intents[0].intent}'";
-                    }
-                    reply = activity.CreateReply(retorno);
+                    retorno = $"Temos os neurologistas João, Paulo etc '{r.intents[0].intent}'";
                 }
+                Activity reply = activity.CreateReply(retorno);            
                 await connector.Conversations.ReplyToActivityAsync(reply);
             }
             else
@@ -55,9 +54,36 @@ namespace Bot_Application1
             return response;
         }
 
+        private Attachment GetHeroCardCarousel()
+        {
+            List<CardImage> cardImages = new List<CardImage>();
+            cardImages.Add(new CardImage(url: "http://4.bp.blogspot.com/-XyxcPFHEqrk/TzqhqdwvrPI/AAAAAAAADkc/q625G63G5eY/s1600/sergio+malandro.JPG"));
+            cardImages.Add(new CardImage(url: "http://4.bp.blogspot.com/-XyxcPFHEqrk/TzqhqdwvrPI/AAAAAAAADkc/q625G63G5eY/s1600/sergio+malandro.JPG"));
+            cardImages.Add(new CardImage(url: "http://4.bp.blogspot.com/-XyxcPFHEqrk/TzqhqdwvrPI/AAAAAAAADkc/q625G63G5eY/s1600/sergio+malandro.JPG"));
+            cardImages.Add(new CardImage(url: "http://4.bp.blogspot.com/-XyxcPFHEqrk/TzqhqdwvrPI/AAAAAAAADkc/q625G63G5eY/s1600/sergio+malandro.JPG"));
+            cardImages.Add(new CardImage(url: "http://4.bp.blogspot.com/-XyxcPFHEqrk/TzqhqdwvrPI/AAAAAAAADkc/q625G63G5eY/s1600/sergio+malandro.JPG"));
+            List<CardAction> cardButtons = new List<CardAction>();
+            CardAction plButton = new CardAction()
+            {
+                Value = "https://en.wikipedia.org/wiki/Pig_Latin",
+                Type = "openUrl",
+                Title = "WikiPedia Page"
+            };
+            cardButtons.Add(plButton);
+            HeroCard plCard = new HeroCard()
+            {
+                Title = "I'm a hero card",
+                Subtitle = "Pig Latin Wikipedia Page",
+                Images = cardImages,
+                Buttons = cardButtons
+            };
+            Attachment plAttachment = plCard.ToAttachment();
+            return plAttachment;
+        }
+
         private static async Task<Utterance> Response(string text)
         {
-            return await Luis.GetResponse(text);            
+            return await LuisSaude.GetResponse(text);            
         }
 
         private Activity HandleSystemMessage(Activity message)

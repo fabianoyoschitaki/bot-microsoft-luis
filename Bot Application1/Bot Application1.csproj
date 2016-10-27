@@ -121,8 +121,8 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
-    <Compile Include="Services\Luis.cs" />
-    <Compile Include="Dialogs\MedicoDialog.cs" />
+    <Compile Include="Services\LuisSeguro.cs" />
+    <Compile Include="Services\LuisSaude.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

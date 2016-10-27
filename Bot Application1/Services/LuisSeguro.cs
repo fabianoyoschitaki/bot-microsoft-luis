@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Bot_Application1.Services
 {
-    public class Luis
+    public class LuisSeguro
     {
         public static async Task<Utterance> GetResponse(string message)
         {
@@ -16,7 +16,7 @@ namespace Bot_Application1.Services
             {
                 const string authKey = "15db44f891c044cd81d37d4018a528eb";
 
-                var url = $"https://api.projectoxford.ai/luis/v1/application?id=391ad9fa-d332-4279-bc79-5ed39cdefed1&subscription-key={authKey}&q={message}";
+                var url = $"https://api.projectoxford.ai/luis/v1/application?id=73796693-ea2b-4f19-b823-593f131dccf4&subscription-key={authKey}&q={message}";
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
