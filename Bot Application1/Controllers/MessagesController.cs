@@ -1,12 +1,12 @@
-﻿using System;
-using System.Linq;
+﻿using Bot_Application1.Serialization;
+using Bot_Application1.Services;
+using Microsoft.Bot.Connector;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
-using Microsoft.Bot.Connector;
-using Newtonsoft.Json;
+using System.Web.Services.Description;
 
 namespace Bot_Application1
 {
@@ -23,8 +23,7 @@ namespace Bot_Application1
             {
                 ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
                 // calculate something for us to return
-                int length = (activity.Text ?? string.Empty).Length;
-
+                
                 Activity reply;
                 if (activity.Text == "a"
                  || activity.Text == "b"
@@ -34,10 +33,17 @@ namespace Bot_Application1
                  || activity.Text == "f")
                 {
                     reply = activity.CreateReply($"{activity.Text} teste");
-                } else
+                }
+                else
                 {
                     // return our reply to the user
-                    reply = activity.CreateReply($"Você enviou '{activity.Text}', tendo {length} caracteres");
+                    var r = await Response(activity.Text);
+                    string retorno = "";
+                    if (r.intents[0].intent == "ConsultarNeurologista")
+                    {
+                        retorno = $"Temos os neurologistas João, Paulo etc '{r.intents[0].intent}'";
+                    }
+                    reply = activity.CreateReply(retorno);
                 }
                 await connector.Conversations.ReplyToActivityAsync(reply);
             }
@@ -47,6 +53,11 @@ namespace Bot_Application1
             }
             var response = Request.CreateResponse(HttpStatusCode.OK);
             return response;
+        }
+
+        private static async Task<Utterance> Response(string text)
+        {
+            return await Luis.GetResponse(text);            
         }
 
         private Activity HandleSystemMessage(Activity message)
