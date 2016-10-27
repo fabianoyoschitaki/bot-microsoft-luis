@@ -25,13 +25,9 @@ namespace Bot_Application1
             {
                 Activity reply = activity.CreateReply("Rá! Ié ié! Em que posso ajudar?");
                 reply.Attachments = new List<Attachment>();  //****** INIT
-                reply.Attachments.Add(new Attachment()
-                {
-                    ContentUrl = $"http://4.bp.blogspot.com/-XyxcPFHEqrk/TzqhqdwvrPI/AAAAAAAADkc/q625G63G5eY/s1600/sergio+malandro.JPG",
-                    ContentType = "image/png",
-                    Name = "Sergio_Malandro.png"
-                });
-                reply.Attachments.Add(GetHeroCardCarousel());
+                //reply.Attachments.Add(GetImage());
+                reply.Attachments.Add(GetPdf());
+                //reply.Attachments.Add(GetHeroCardCarousel());
                 await connector.Conversations.ReplyToActivityAsync(reply);
             }
             else if (activity.Type == ActivityTypes.Message)
@@ -54,6 +50,24 @@ namespace Bot_Application1
             return response;
         }
 
+        private Attachment GetImage()
+        {
+            return new Attachment()
+            {
+                ContentUrl = $"http://4.bp.blogspot.com/-XyxcPFHEqrk/TzqhqdwvrPI/AAAAAAAADkc/q625G63G5eY/s1600/sergio+malandro.JPG",
+                ContentType = "image/png",
+                Name = "Sergio_Malandro.png"
+            };
+        }
+        private Attachment GetPdf()
+        {
+            return new Attachment()
+            {
+                ContentUrl = $"http://ppgee.poli.usp.br/wp-content/uploads/sites/92/2016/10/Edital-1o-periodo-2017-18-10-2016.pdf",
+                ContentType = "application/pdf",
+                Name = "arquivo.pdf"
+            };
+        }
         private Attachment GetHeroCardCarousel()
         {
             List<CardImage> cardImages = new List<CardImage>();
