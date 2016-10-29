@@ -25,7 +25,7 @@ namespace Bot_Application1
             {
                 Activity reply = activity.CreateReply("Rá! Ié ié! Em que posso ajudar?");
                 reply.Attachments = new List<Attachment>();  //****** INIT
-                //reply.Attachments.Add(GetImage());
+                reply.Attachments.Add(GetImage());
                 reply.Attachments.Add(GetPdf());
                 //reply.Attachments.Add(GetHeroCardCarousel());
                 await connector.Conversations.ReplyToActivityAsync(reply);
